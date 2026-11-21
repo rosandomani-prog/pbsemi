@@ -1,0 +1,40 @@
+IURAN BADMINTON PB. SEMI - VERSI PHP + MYSQL
+=============================================
+
+ISI PAKET
+- index.html     : tampilan website (semua fitur)
+- api.php        : server (PHP + MySQL), login, peran admin/anggota
+- config.php     : pengaturan koneksi database (WAJIB DIISI)
+- .htaccess      : pengaman sederhana (jangan dihapus)
+- database.sql   : skema tabel (OPSIONAL, jangan di-upload ke hosting)
+
+CARA PASANG DI INFINITYFREE
+1. Panel InfinityFree > MySQL Databases > buat database baru (misalnya "iuran").
+   Catat: MySQL Hostname (contoh sql123.infinityfree.com), nama database,
+   username, dan password database.
+2. Buka config.php, isi DB_HOST, DB_NAME, DB_USER, DB_PASS sesuai catatan tadi.
+3. File Manager (atau FTP) > folder htdocs > upload: index.html, api.php, config.php, .htaccess
+4. Buka alamat situs Anda. Tabel dibuat otomatis. Tekan "Masuk" lalu buat akun admin pertama
+   (pilih nama pengguna dan kata sandi sendiri).
+5. Admin menambah akun anggota lewat Menu > Pengguna.
+
+PERAN
+- Admin   : mengelola catatan, hutang, tabungan, undian, dan pengguna.
+- Anggota : hanya melihat (catatan, hutang, tabungan, statistik, kartu). Data diperbarui otomatis.
+
+DATA DI DATABASE (tabel)
+users, sesi (catatan), pemain, hutang, penabung, tabungan_tx.
+Cadangan: phpMyAdmin > pilih database > Export.
+
+LUPA KATA SANDI
+- Admin lain bisa mengganti sandi lewat Menu > Pengguna > Sandi.
+- Jika satu-satunya admin lupa sandi: phpMyAdmin > tabel users > kosongkan tabel (hapus semua baris),
+  lalu buka situs dan buat akun admin baru. Catatan, hutang, dan tabungan tidak ikut terhapus.
+
+CATATAN PENTING
+- Gunakan PHP 7.4 atau lebih baru (diuji di PHP 8.3 dan MariaDB 10.11).
+- Data live memakai pengecekan berkala (tiap 5 detik, melambat otomatis jika tidak ada perubahan).
+  Hosting gratis punya batas hit harian, jadi jangan membiarkan banyak tab terbuka terus-menerus.
+- Gunakan HTTPS jika tersedia, karena kata sandi dikirim saat login.
+- Kata sandi disimpan terenkripsi (hash). Tidak ada pembatasan percobaan login selain jeda 0,7 detik
+  setiap salah sandi.

@@ -1,0 +1,62 @@
+-- Skema database Iuran Badminton PB. SEMI (MySQL / MariaDB)
+-- OPSIONAL: tabel otomatis dibuat saat situs pertama kali dibuka. File ini hanya jika ingin impor manual lewat phpMyAdmin.
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(30) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('admin','anggota') NOT NULL DEFAULT 'anggota',
+  created_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS sesi (
+  id VARCHAR(40) PRIMARY KEY,
+  nama VARCHAR(80) NOT NULL DEFAULT '',
+  tgl DATE NOT NULL,
+  hk INT NOT NULL DEFAULT 3000,
+  hh INT NOT NULL DEFAULT 2000,
+  rounds MEDIUMTEXT NULL,
+  updated_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS pemain (
+  sesi_id VARCHAR(40) NOT NULL,
+  id VARCHAR(40) NOT NULL,
+  urut INT NOT NULL DEFAULT 0,
+  nama VARCHAR(60) NOT NULL,
+  hadir TINYINT(1) NOT NULL DEFAULT 1,
+  kok INT NOT NULL DEFAULT 0,
+  main INT NOT NULL DEFAULT 0,
+  bayar TINYINT(1) NOT NULL DEFAULT 0,
+  bayar_via VARCHAR(20) NULL,
+  PRIMARY KEY (sesi_id, id),
+  FOREIGN KEY (sesi_id) REFERENCES sesi(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS hutang (
+  id VARCHAR(40) PRIMARY KEY,
+  nama VARCHAR(60) NOT NULL,
+  jumlah INT NOT NULL DEFAULT 0,
+  ket VARCHAR(120) NOT NULL DEFAULT '',
+  tgl DATE NOT NULL,
+  lunas TINYINT(1) NOT NULL DEFAULT 0,
+  tgl_lunas DATE NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS penabung (
+  id VARCHAR(40) PRIMARY KEY,
+  nama VARCHAR(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tabungan_tx (
+  seq BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id VARCHAR(40) NOT NULL UNIQUE,
+  penabung_id VARCHAR(40) NOT NULL,
+  tgl DATE NOT NULL,
+  tipe ENUM('setor','tarik','iuran') NOT NULL,
+  jumlah INT NOT NULL DEFAULT 0,
+  ket VARCHAR(120) NOT NULL DEFAULT '',
+  sesi_id VARCHAR(40) NULL,
+  pemain_id VARCHAR(40) NULL,
+  FOREIGN KEY (penabung_id) REFERENCES penabung(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
